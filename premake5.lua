@@ -7,7 +7,15 @@ project "ImGuizmo"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
+	
+	links
+	{
+		"ImGui"
+	}
+	includedirs
+	{
+		"%{IncludeDir.ImGui}"
+	}
 	files
 	{
 		"ImGuizmo.h",
