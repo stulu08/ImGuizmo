@@ -18,14 +18,17 @@ project "ImGuizmo"
 	}
 	files
 	{
-		"ImGuizmo.h",
-		"ImGuizmo.cpp",
+		"GraphEditor.cpp",
+		"GraphEditor.h",
 		"ImCurveEdit.cpp",
 		"ImCurveEdit.h",
 		"ImGradient.cpp",
 		"ImGradient.h",
+		"ImGuizmo.h",
+		"ImGuizmo.cpp",
 		"ImSequencer.h",
-		"ImSequencer.cpp"
+		"ImSequencer.cpp",
+		"ImZoomSlider.h",
 	}
 
 	filter "system:windows"
@@ -48,3 +51,5 @@ project "ImGuizmo"
 	filter "configurations:Dist"
 		runtime "Release"
 		optimize "on"
+		symbols "off"
+
