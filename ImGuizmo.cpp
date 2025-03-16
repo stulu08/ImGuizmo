@@ -2645,7 +2645,7 @@ namespace IMGUIZMO_NAMESPACE
       return radius < pixelRadius;
    }
 
-   bool Manipulate(const float* view, const float* projection, OPERATION operation, MODE mode, float* matrix, float* deltaMatrix, const float* snap, const float* localBounds, const float* boundsSnap)
+   MANIPULATED Manipulate(const float* view, const float* projection, OPERATION operation, MODE mode, float* matrix, float* deltaMatrix, const float* snap, const float* localBounds, const float* boundsSnap)
    {
       gContext.mDrawList->PushClipRect (ImVec2 (gContext.mX, gContext.mY), ImVec2 (gContext.mX + gContext.mWidth, gContext.mY + gContext.mHeight), false);
 
@@ -2663,19 +2663,25 @@ namespace IMGUIZMO_NAMESPACE
       camSpacePosition.TransformPoint(makeVect(0.f, 0.f, 0.f), gContext.mMVP);
       if (!gContext.mIsOrthographic && camSpacePosition.z < 0.001f && !gContext.mbUsing)
       {
-         return false;
+         return MANIPULATED::NONE;
       }
 
       // --
       int type = MT_NONE;
-      bool manipulated = false;
+      int manipulated = MANIPULATED::NONE;
       if (gContext.mbEnable)
       {
          if (!gContext.mbUsingBounds)
          {
-            manipulated = HandleTranslation(matrix, deltaMatrix, operation, type, snap) ||
-                          HandleScale(matrix, deltaMatrix, operation, type, snap) ||
-                          HandleRotation(matrix, deltaMatrix, operation, type, snap);
+            if (HandleTranslation(matrix, deltaMatrix, operation, type, snap)) {
+               manipulated |= MANIPULATED::TRANSLATED;
+            }
+            if (HandleScale(matrix, deltaMatrix, operation, type, snap)) {
+               manipulated |= MANIPULATED::SCALED;
+            }
+            if (HandleRotation(matrix, deltaMatrix, operation, type, snap)) {
+               manipulated |= MANIPULATED::ROTATED;
+            }
          }
       }
 
@@ -2694,7 +2700,7 @@ namespace IMGUIZMO_NAMESPACE
       }
 
       gContext.mDrawList->PopClipRect ();
-      return manipulated;
+      return (MANIPULATED)manipulated;
    }
 
    void SetGizmoSizeClipSpace(float value)
